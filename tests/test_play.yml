@@ -1,0 +1,6 @@
+---
+- hosts: '{{ test_host | default( "localhost") }}'
+  roles:
+    - role: '{{ "snappass-docker" if test_host=="vagrant" else "ansible-snappass-docker" }}'
+      snappass_redis_port: '{{ lookup("env", "redis_port" ) | default(6379) }}'
+

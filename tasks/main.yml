@@ -1,0 +1,44 @@
+---
+# tasks file for snappass-docker
+
+- git:
+    repo: 'https://github.com/pinterest/snappass'
+    dest: /usr/share/source/snappass
+
+- docker_image:
+    path: /usr/share/source/snappass
+    state: present
+    name: pinterest/snappass
+
+- name: Get dockerhost
+  shell: /sbin/ip route | awk '/docker0/ { print $NF }'
+  register: dockerhost_response
+
+- set_fact:
+    dockerhost_ip:    "{{ dockerhost_response.stdout }}"
+
+- set_fact:
+    redis_url: "redis://:{{ snappass_redis_password }}@{{ dockerhost_ip }}:{{ snappass_redis_port }}/{{ snappass_redis_db }}"
+
+- name: Generate a secret key
+  command: python -c 'import os; print(os.urandom(16))'
+  register: result
+
+- set_fact:
+    secret_key: result.stdout
+
+- docker_container:
+    name: "{{ snappass_container_name }}"
+    image: pinterest/snappass
+    ports: "{{ snappass_port }}:5000"
+    state: started
+    env:
+      SECRET_KEY: "{{ secret_key }}"
+      NO_SSL: True
+      REDIS_URL:  "{{ redis_url }}"
+      TZ: America/New_York
+  register: snappass_container
+
+- name: Wait until snappass is available
+  wait_for: port={{ snappass_port }} delay=3
+  when: snappass_container.changed
