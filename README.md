@@ -1,6 +1,8 @@
 Ansible Role for Snappass in Docker
 ===================================
 
+[![Build Status](https://travis-ci.org/derekmerck/ansible-snappass-docker.svg?branch=master)](https://travis-ci.org/derekmerck/ansible-snappass-docker)
+
 Derek Merck  
 <derek_merck@brown.edu>  
 Rhode Island Hospital and Brown University  
@@ -35,8 +37,8 @@ Role Variables
 
 Set the repo to clone to build the Snappass image.
 
-- https://github.com/pinterest/snappass - official repo
-- https://github.com/jameswthorne/snappass - fork that publishes an api
+- https://github.com/pinterest/snappass - official repo (uses branch "master")
+- https://github.com/jameswthorne/snappass - fork that publishes an api (uses branch "api")
 
 ```yaml
 snappass_repo_url: https://github.com/pinterest/snappass

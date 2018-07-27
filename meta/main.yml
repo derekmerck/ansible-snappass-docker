@@ -1,6 +1,6 @@
 galaxy_info:
   author: Derek Merck
-  description: Configure and run a [Snappass](https://github.com/pinterest/snappass) secret-cache in a Docker container.
+  description: Configure and run a Snappass secret-cache in a Docker container.
 
   role_name: snappass-docker
 
