@@ -2,7 +2,7 @@ galaxy_info:
   author: Derek Merck
   description: Configure and run a [Snappass](https://github.com/pinterest/snappass) secret-cache in a Docker container.
 
-  role_name: redis-docker
+  role_name: snappass-docker
 
   license: MIT
 
@@ -17,4 +17,4 @@ dependencies:
     pip_install_packages: docker
   - role: geerlingguy.docker
 
-  - role: redis-docker
+  - role: derekmerck.redis_docker
