@@ -6,17 +6,21 @@
     state: absent
   become: yes
 
-- name: "Checking out {{ snappass_repo_url }}"
+- set_fact:
+    namespace: "{{ 'jameswthorn' if snappass_repo_url.find('jameswthorn')>-1 else 'pinterest' }}"
+    branch:    "{{ 'api' if snappass_repo_url.find('jameswthorn')>-1 else 'master' }}"
+
+- name: "Check out {{ snappass_repo_url }}:{{ branch }}"
   git:
     repo: "{{ snappass_repo_url }}"
     dest: /usr/share/source/snappass
-    version: "{{ 'api' if snappass_repo_url.find('jameswthorn')>-1 else 'master' }}"
+    version: "{{ branch }}"
   become: yes
 
 - docker_image:
     path: /usr/share/source/snappass
     state: present
-    name: pinterest/snappass
+    name: "{{ namespace }}/snappass:{{ branch }}"
 
 - name: Get dockerhost
   shell: /sbin/ip route | awk '/docker0/ { print $NF }'
@@ -36,8 +40,8 @@
     secret_key: result.stdout
 
 - docker_container:
-    name: "{{ snappass_container_name }}"
-    image: pinterest/snappass
+    name:  "{{ snappass_container_name }}"
+    image: "{{ namespace }}/snappass:{{ branch }}"
     ports: "{{ snappass_port }}:5000"
     state: started
     env:
