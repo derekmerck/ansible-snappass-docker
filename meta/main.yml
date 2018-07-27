@@ -18,3 +18,4 @@ dependencies:
   - role: geerlingguy.docker
 
   - role: derekmerck.redis_docker
+    redis_port: "{{ snappass_redis_port }}"
