@@ -16,6 +16,10 @@ env:
     snappass_port: 5000
     redis_port: 6400
 
+  matrix:
+    - snappass_repo_url: https://github.com/pinterest/snappass
+    - snappass_repo_url: https://github.com/jameswthorne/snappass
+
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
