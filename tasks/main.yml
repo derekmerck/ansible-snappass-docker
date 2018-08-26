@@ -1,6 +1,21 @@
 ---
 # tasks file for snappass-docker
 
+#############################
+# Setup dockerhost
+#############################
+
+- name: Get dockerhost
+  shell: /sbin/ip route | awk '/docker0/ { print $NF }'
+  register: dockerhost_response
+  when: dockerhost_ip is not defined
+
+- set_fact:
+    dockerhost_ip:    "{{ dockerhost_response.stdout }}"
+  when: dockerhost_ip is not defined
+
+
+
 - file:
     path: /usr/share/source/snappass
     state: absent
@@ -21,13 +36,6 @@
     path: /usr/share/source/snappass
     state: present
     name: "{{ snappass_namespace }}/snappass:{{ snappass_branch }}"
-
-- name: Get dockerhost
-  shell: /sbin/ip route | awk '/docker0/ { print $NF }'
-  register: dockerhost_response
-
-- set_fact:
-    dockerhost_ip:    "{{ dockerhost_response.stdout }}"
 
 - set_fact:
     redis_url: "redis://:{{ snappass_redis_password }}@{{ dockerhost_ip }}:{{ snappass_redis_port }}/{{ snappass_redis_db }}"
