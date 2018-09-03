@@ -1,17 +1,30 @@
 ---
 # defaults file for snappass-docker
 
-logger:                 "json-file"
+# Global defaults
+# -----------------------------
+service_password:          "passw0rd!"
+# data_dir:                  "/data"
+# config_dir:                "/config"
+logger:                    "json-file"
+log_opts:                  {}
 
+# Docker image configuration
+# -----------------------------
 snappass_repo_url: https://github.com/pinterest/snappass
 # snappass_repo_url: https://github.com/jameswthorne/snappass  # API
-snappass_container_name: snappass
-snappass_port:           5000
 
-snappass_logger:            "{{ logger }}"
-snappass_log_opts:          "{{ {'splunk-source': snappass_container_name } if snappass_logger=='splunk' else {} }}"
+# Docker container configuration
+# -----------------------------
+snappass_container_name:   snappass
+snappass_port:             5000
 
+snappass_logger:           "{{ logger }}"
+snappass_log_opts:         '{{ log_opts | combine( {"splunk-source": snappass_container_name} ) if logger=="splunk" else log_opts }}'
+
+# Service configuration
+# -----------------------------
 snappass_redis_container_name:  redis
 snappass_redis_port:     6379
-snappass_redis_password: "passw0rd!"
+snappass_redis_password: "{{ service_password }}"
 snappass_redis_db:       0

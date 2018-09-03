@@ -17,5 +17,5 @@ dependencies:
     pip_install_packages: docker
   - role: geerlingguy.docker
 
-  - role: derekmerck.redis_docker
+  - role: redis-docker
     redis_port: "{{ snappass_redis_port }}"
